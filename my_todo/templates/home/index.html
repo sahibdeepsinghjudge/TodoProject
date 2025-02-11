@@ -2,6 +2,7 @@
 
 {% block content %}
     <div class="container mt-5 " style="width: 70%;">
+        <small>{{request.user.username}}</small>
         <h1>My todo's</h1>
     </div>
     <div class="container bg-light mt-5 p-3 rounded-3" style="width: 70%;">
@@ -20,9 +21,12 @@
         </form>
     </div>
     <div class="container bg-light mt-2 p-3 rounded-3" style="width: 70%;">
+        {% if not todos %}
+            <h4>No new Todos</h4>
+        {% endif %}
         {% for todo in todos %}
-        <div class="border-bottom py-2">
-
+        <div class="border-bottom py-2 d-flex justify-content-between">
+            <div>
             {% if todo.is_completed %}
                 <strike><h2>{{todo.title}}</h2></strike>
                 <p>{{todo.description}}</p>
@@ -31,6 +35,16 @@
                 <h2>{{todo.title}}</h2>
                 <p>{{todo.description}}</p>
             {% endif%}
+        </div>
+        <div>
+            {% if todo.is_completed %}
+            <button class="btn btn-success disabled">Completed</button>
+            {% else %}
+            <a href="{% url 'complete' todo.id %}"><button class="btn btn-success">Complete</button></a>
+            {% endif %}
+            <a href="{% url 'update' todo.id %}"><button class="btn btn-info">Edit</button></a>
+            <a href="{% url 'delete' todo.id %}"><button class="btn btn-danger">Delete</button></a>
+        </div>
         </div>
     {% endfor %}
     </div>
