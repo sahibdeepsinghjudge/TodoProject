@@ -1,13 +1,27 @@
 {% extends "home/base.html" %}
 
 {% block content %}
-<h1>Create Account</h1>
-<form action="{% url 'create_account' %}" method="post">
+<div class="container shadow rounded-4 mt-5 p-5 w-50">
+    <h4>Welcome to my todo app</h4>
+    <h5>Create Account</h5>
+    <form action="{% url 'create_account' %}" class="form-group" method="post">
     {% csrf_token %}
-    <input type="text" name="username" placeholder="Username">
-    <input type="password" name="password" placeholder="Password">
-    <input type="email" name="email" placeholder="Email">
-    <button type="submit">Create Account</button>
-</form>
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" name="username" placeholder="Username">
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" name="email" placeholder="Email">
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" name="password" placeholder="Password">
+    </div>
+        <button type="submit" class="btn btn-primary mt-2">Create Account</button>
+        <br>
+        <small class="text-muted">Already have an account? <a href="{% url 'login' %}">Login</a></small>
+    </form>
+</div>
 {% endblock %}
 

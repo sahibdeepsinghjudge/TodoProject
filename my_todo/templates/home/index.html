@@ -2,7 +2,8 @@
 
 {% block content %}
     <div class="container mt-5 " style="width: 70%;">
-        <small>{{request.user.username}}</small>
+        <small class="d-flex justify-content-between"><div>Logged in as : <span class="text-primary text-uppercase">{{request.user.username}}</span></div>
+             <span class="text-danger font-weight-bold"><a href="{% url 'logout' %}">Logout</a></span> </small>
         <h1>My todo's</h1>
     </div>
     <div class="container bg-light mt-5 p-3 rounded-3" style="width: 70%;">

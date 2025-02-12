@@ -6,7 +6,9 @@ from django.http import HttpResponse
 
 def view_todos(request):
     if request.user.is_authenticated:
-        todos = Todo.objects.all().order_by("-id")
+        todos = Todo.objects.filter(created_by=request.user).order_by("-id")
+        print(request.user)
+
         context = {
             "todos": todos
         }
@@ -19,7 +21,7 @@ def create_todo(request):
     if request.method =="POST": 
         title = request.POST.get("title")
         description = request.POST.get("description")
-        todo = Todo.objects.create(title=title, description=description)
+        todo = Todo.objects.create(title=title, description=description,created_by=request.user)
         return redirect("home")
     return render(request, "home/index.html")
 
@@ -27,8 +29,11 @@ def create_todo(request):
 def complete_todo(request,id):
     try:
         todo = Todo.objects.get(id=id)
-        todo.is_completed = True
-        todo.save() 
+        if todo.created_by == request.user:
+            todo.is_completed = True
+            todo.save() 
+        else:
+            return HttpResponse("You are not authorized to complete this todo")
     except :
         return HttpResponse("Todo not found, Invalid ID")
     
@@ -38,7 +43,10 @@ def complete_todo(request,id):
 def delete_todo(request,id):
     try:
         todo = Todo.objects.get(id=id)
-        todo.delete()
+        if todo.created_by == request.user:
+            todo.delete()
+        else:
+            return HttpResponse("You are not authorized to delete this todo")
     except:
         return HttpResponse("Todo not found, Invalid ID")
     return redirect("home")
@@ -47,6 +55,9 @@ def delete_todo(request,id):
 def update_todo(request,id):
     try:
         todo = Todo.objects.get(id=id)
+        if todo.created_by != request.user:
+            return HttpResponse("You are not authorized to update this todo")
+
     except:
         return HttpResponse("Todo not found, Invalid ID")
     
